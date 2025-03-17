@@ -1,4 +1,4 @@
-create database Library; -- bir kez database oluşturulurken çalıştırılır.
+create database Kutuphane; -- bir kez database oluşturulurken çalıştırılır.
 
 
 use Kutuphane -- bu kütüpaheyi kullanarak aşağıdaki tabloları ekleyebilirsiniz.
@@ -48,9 +48,6 @@ uyeNo int Foreign Key (uyeNo) references uyeler(uyeNo),
 kutuphaneNo int Foreign Key (kutuphaneNo) references kutuphane (kutuphaneNo),
 ISBN int Foreign Key (ISBN) references kitaplar(ISBN)
 );
-
-
-use kutuphane 
 
 create table uyeler(
 uyeNo int not null identity(1,1) primary key,
