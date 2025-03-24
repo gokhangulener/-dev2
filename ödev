@@ -1,77 +1,92 @@
-create database dbkutuphane
-use dbkutuphane
+create database kutuphane; --bir kez database oluşturulurken çalıştırılır.
 
-CREATE TABLE Adresler (
-AdresNo INT PRIMARY KEY,
-Sehir VARCHAR(255),
-Mahalle VARCHAR(255),
-BinaNo INT,
-PostaKodu VARCHAR(10),
-Ulke VARCHAR(100),
-Cadde VARCHAR(255)
-)
-CREATE TABLE Uyeler (
-UyeNo INT PRIMARY KEY,
-UyeAdi VARCHAR(50),
-UyeSoyadi VARCHAR(50),
-Telefon VARCHAR(15),
-Eposta VARCHAR(100),
-Cinsiyet CHAR(1),
-AdresNo INT,
-FOREIGN KEY (AdresNo) REFERENCES Adresler(AdresNo)
-)
-CREATE TABLE Kutuphane (
-KutuphaneNo INT PRIMARY KEY,
-KutuphaneIsmi VARCHAR(100),
-Aciklama TEXT,
-AdresNo INT,
-FOREIGN KEY (AdresNo) REFERENCES Adresler(AdresNo)
-)
-CREATE TABLE Kitaplar (
-ISBN VARCHAR(20) PRIMARY KEY,
-KitapAdi VARCHAR(255),
-Yazar VARCHAR(255),
-Yayinevi VARCHAR(255),
-BasimYili INT,
-SayfaSayisi INT
-)
-CREATE TABLE Kategoriler (
-KategoriID INT PRIMARY KEY,
-KategoriAdi VARCHAR(100)
-)
-CREATE TABLE Yazarlar (
-YazarID INT PRIMARY KEY,
-YazarAdi VARCHAR(100),
-DogumTarihi DATE,
-DogumYeri VARCHAR(100)
-)
-CREATE TABLE Emanet (
-EmanetNo INT PRIMARY KEY,
-EmanetTarihi DATE,
-TeslimTarihi DATE,
-UyeNo INT,
-FOREIGN KEY (UyeNo) REFERENCES Uyeler(UyeNo),
-KutuphaneNo INT,
-FOREIGN KEY (KutuphaneNo) REFERENCES Kutuphane(KutuphaneNo),
-ISBN VARCHAR(20),
-FOREIGN KEY (ISBN) REFERENCES Kitaplar(ISBN)
-)
-/*
-Alter table kitaplar
-Add kategoriler char
-Constraint FK_kitaplar_ISBN   /*kitaplar tablosu olmadığı için hata veriyor */
-Foreign key (ISBN)
-References (Kategoriler)ISBN
+use Kutuphane -- bu kütüphaneyi kullanarak tablo ekleyebiliriz
 
-Alter table yazarlar 
-Add yazarlar chat
-Constraint FK_kitaplar_yazarno/*yazarlar tablosu olmadığı için hata veriyor */
-Foreign key (yazarno)
-References yazarlar(yazarno)
-uyeNo int CONSTRAINT FK_uyeler_emanet
-FOREIGN KEY (uyeNo) REFERENCES uyeler(uyeNo)
-kutuphaneNo int CONSTRAINT FK_kutuphane_emanet
-FOREIGN KEY (kutuphaneNo) REFERENCES kutuphane(kutuphaneNo) /*tüm tablolar oluşturulmalı  */
-ISBN nvarchar(20) CONSTRAINT FK_kitap_emanet
-FOREIGN KEY(ISBN) REFERENCES KITAPLAR(ISBN)
-)
+1)              
+create table adresler(
+adresNo int not null identity(1,1) primary key,
+sehir nvarchar(30),
+cadde nvarchar(30),
+mahalle nvarchar(30),
+bina_No int,
+posta_Kodu int,
+ulke nvarchar(100)
+
+);
+
+2)    
+create table Uyeler(
+Uye_No int not null identity(1,1) primary key,
+Uye_Ad nvarchar(50) not null,
+Uye_Soyad nvarchar(50) not null,
+Telefon nvarchar(20) not null,
+Cinsiyet char(2),
+Eposta nvarchar(100),
+AdresNo int foreign key(adresNo) references adresler(adresNo)         
+);
+
+
+3)
+create table Kutuphane_t (
+Kutuphane_No int identity(1,1) not null primary key,
+Kutuphane_isim nvarchar(100),
+Acıklama nvarchar(150),
+adresNo int  foreign key (adresNo)references adresler(adresNo)         
+
+);
+
+4)
+create table kitaplar(
+Isbn int not null primary key,
+Sayfa_Sayisi nvarchar(50),
+Kitap_Adi nvarchar(50),
+Yayin_Tarih nvarchar(50)
+
+);
+
+5)
+create table emanet(
+emanet_no int identity(1,1) not null primary key,
+emanet_tarih nvarchar(50),
+teslim_tarih nvarchar(50),
+uye_No int foreign key (uye_No) references Uyeler(Uye_No),                                
+Kutuphane_No int foreign key (Kutuphane_No) references Kutuphane_t(Kutuphane_No),        
+Isbn int foreign key (Isbn) references kitaplar(Isbn)                                   
+
+);
+
+6)
+create table KitapBulunur(
+Kutuphane_No int foreign key(Kutuphane_No) references Kutuphane_t(Kutuphane_No),               
+ISBN int foreign key(ISBN) references Kitaplar(ISBN),                                          
+Miktar int
+
+);
+7)
+create table Kategoriler(
+Kategori_No int not null identity(1,1) primary key,
+Kategori_Adi nvarchar(100)
+
+);
+8)
+create table KategoriBulunur(
+Id int identity(1,1) not null primary key,
+Kategori_No int foreign key(Kategori_No) references Kategoriler(Kategori_No),            
+ISBN int foreign key(ISBN) references Kitaplar(ISBN),                                    
+
+);
+
+
+9)
+create table Yazarlar(
+Yazar_No int not null identity(1,1) primary key,
+Yazar_Ad nvarchar(100) not null,
+Yazar_Soyad nvarchar(100) not null,
+
+);
+10)
+create table KitapYazar(
+Id int identity(1,1) not null primary key,     
+ISBN int foreign key(ISBN) references Kitaplar(ISBN),                  
+Yazar_No int foreign key(Yazar_No) references Yazarlar(Yazar_No)        
+);
