@@ -1,97 +1,77 @@
-create database Kutuphane; -- bir kez database oluşturulurken çalıştırılır.
+create database dbkutuphane
+use dbkutuphane
 
+CREATE TABLE Adresler (
+AdresNo INT PRIMARY KEY,
+Sehir VARCHAR(255),
+Mahalle VARCHAR(255),
+BinaNo INT,
+PostaKodu VARCHAR(10),
+Ulke VARCHAR(100),
+Cadde VARCHAR(255)
+)
+CREATE TABLE Uyeler (
+UyeNo INT PRIMARY KEY,
+UyeAdi VARCHAR(50),
+UyeSoyadi VARCHAR(50),
+Telefon VARCHAR(15),
+Eposta VARCHAR(100),
+Cinsiyet CHAR(1),
+AdresNo INT,
+FOREIGN KEY (AdresNo) REFERENCES Adresler(AdresNo)
+)
+CREATE TABLE Kutuphane (
+KutuphaneNo INT PRIMARY KEY,
+KutuphaneIsmi VARCHAR(100),
+Aciklama TEXT,
+AdresNo INT,
+FOREIGN KEY (AdresNo) REFERENCES Adresler(AdresNo)
+)
+CREATE TABLE Kitaplar (
+ISBN VARCHAR(20) PRIMARY KEY,
+KitapAdi VARCHAR(255),
+Yazar VARCHAR(255),
+Yayinevi VARCHAR(255),
+BasimYili INT,
+SayfaSayisi INT
+)
+CREATE TABLE Kategoriler (
+KategoriID INT PRIMARY KEY,
+KategoriAdi VARCHAR(100)
+)
+CREATE TABLE Yazarlar (
+YazarID INT PRIMARY KEY,
+YazarAdi VARCHAR(100),
+DogumTarihi DATE,
+DogumYeri VARCHAR(100)
+)
+CREATE TABLE Emanet (
+EmanetNo INT PRIMARY KEY,
+EmanetTarihi DATE,
+TeslimTarihi DATE,
+UyeNo INT,
+FOREIGN KEY (UyeNo) REFERENCES Uyeler(UyeNo),
+KutuphaneNo INT,
+FOREIGN KEY (KutuphaneNo) REFERENCES Kutuphane(KutuphaneNo),
+ISBN VARCHAR(20),
+FOREIGN KEY (ISBN) REFERENCES Kitaplar(ISBN)
+)
+/*
+Alter table kitaplar
+Add kategoriler char
+Constraint FK_kitaplar_ISBN   /*kitaplar tablosu olmadığı için hata veriyor */
+Foreign key (ISBN)
+References (Kategoriler)ISBN
 
-use Kutuphane -- bu kütüpaheyi kullanarak aşağıdaki tabloları ekleyebilirsiniz.
-
-
-create table Adresler(
-adresNo int not null identity(1,1) Primary Key,
-sehir nvarchar(100),
-cadde nvarchar(100),
-mahalle nvarchar(100),
-binaNo int,
-postaKodu int,
-ulke nvarchar(100)
-);
-
-create table uyeler(
-uyeNo int not null identity(1,1) Primary Key,
-uyeAdi nvarchar(50) not null,
-uyeSoyadi nvarchar(50) not null,
-eposta nvarchar(100),
-telefon nvarchar(100),
-cinsiyet char(2),
-adresNO int Foreign Key(adresNo) REFERENCES 
-adresler(adresNO)
-);
-
-create table kutuphane(
-kutuphaneNO int not null identity(1,1) primary key,
-kutuphaneIsmi nvarchar(100) not null,
-aciklama nvarchar(150),
-adresNo int foreign key (adresNo) references adresler(adresNo)
-);
-
-create table kitaplar(
-ISBN int not null primary key,
-sayfaSayisi int,
-kitapAdi nvarchar(100) not null,
-yayinTarihi nvarchar(100)
-);
-
-
-create table emanet(
-emanetNO int not null identity(1,1) Primary Key,
-emanetTarihi nvarchar(100),
-teslimTarihi nvarchar(100),
-uyeNo int Foreign Key (uyeNo) references uyeler(uyeNo),
-kutuphaneNo int Foreign Key (kutuphaneNo) references kutuphane (kutuphaneNo),
-ISBN int Foreign Key (ISBN) references kitaplar(ISBN)
-);
-
-create table uyeler(
-uyeNo int not null identity(1,1) primary key,
-uyeAdi nvarchar(50) not null,
-uyeSoyadi nvarchar(50) not null,
-telefon nvarchar (20) not null,
-cinsiyet char (2) not null,
-eposta nvarchar(100) not null,
-adresNo int foreign key(adresNo) REFERENCES
-adresler(adresNo)
-);
-
-create table adresler(
-adresNo int not null identity(1,1) Primary Key,
-sehir nvarchar(100),
-cadde nvarchar(100),
-mahalle nvarchar(100),
-binaNo int,
-postaKodu int,
-ulke nvarchar(100),
-);
-
-create table kutuphane_t(
-Kutuphane_No int identity(1,1)  not null Primary Key,
-Kutuphane_isim nvarchar(100),
-aciklama nvarchar(150),
-adresNo int Foreign Key (adresNo) references adresler(adresNo)
-);
-
-create table emanetler(
-emanetNo int  not null identity(1,1) primary key,
-emanetTarih nvarchar(100),
-teslimTarih nvarchar(50),
-uyeNo int foreign key(uyeNo) references Uyeler(uyeNo),
-Kutuphane_No int foreign key(Kutuphane_No) references kutuphane_t(Kutuphane_No),
-Isbn int foreign key(Isbn) references kitaplar(Isbn)
-);
-
-create table kitaplar(
-
-Isbn int not null primary key,
-sayfa_sayisi int,
-Kitap_Adi nvarchar(100)not null,
-Yayin_Adi nvarchar(100),
-Yayin_Tarihi nvarchar(100),
-
-);
+Alter table yazarlar 
+Add yazarlar chat
+Constraint FK_kitaplar_yazarno/*yazarlar tablosu olmadığı için hata veriyor */
+Foreign key (yazarno)
+References yazarlar(yazarno)
+uyeNo int CONSTRAINT FK_uyeler_emanet
+FOREIGN KEY (uyeNo) REFERENCES uyeler(uyeNo)
+kutuphaneNo int CONSTRAINT FK_kutuphane_emanet
+FOREIGN KEY (kutuphaneNo) REFERENCES kutuphane(kutuphaneNo) /*tüm tablolar oluşturulmalı  */
+ISBN nvarchar(20) CONSTRAINT FK_kitap_emanet
+FOREIGN KEY(ISBN) REFERENCES KITAPLAR(ISBN)
+)
