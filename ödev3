@@ -1,0 +1,35 @@
+4.SELECT DISTINCT Arac.Marka, Arac.Model
+FROM Satis
+JOIN Arac ON Satis.Aracno = Arac.Aracno;
+
+
+6.SELECT *
+FROM Arac
+WHERE Aracno NOT IN (SELECT Aracno FROM Satis);
+
+7.SELECT Arac.Marka, Arac.Model, AVG(Satis.Sfiyat) AS Ortalama_Satis
+FROM Satis
+JOIN Arac ON Satis.Aracno = Arac.Aracno
+GROUP BY Arac.Marka, Arac.Model;
+
+8.SELECT 
+    Arac.Marka, 
+    Arac.Model, 
+    COUNT(DISTINCT Alim.Alimno) AS Alim_Sayisi, 
+    COUNT(DISTINCT Satis.Satno) AS Satis_Sayisi
+FROM Arac
+LEFT JOIN Alim ON Arac.Aracno = Alim.Aracno
+LEFT JOIN Satis ON Arac.Aracno = Satis.Aracno
+GROUP BY Arac.Marka, Arac.Model;
+
+9.SELECT Musteri.Madi, Musteri.Msoyadi, Arac.Marka, Arac.Model, Satis.Sfiyat
+FROM Satis
+JOIN Musteri ON Satis.Mno = Musteri.Mno
+JOIN Arac ON Satis.Aracno = Arac.Aracno
+WHERE Satis.Sfiyat > 20000;
+
+10.SELECT Arac.Marka, Arac.Model, Musteri.Madi, Musteri.Madres
+FROM Satis
+JOIN Musteri ON Satis.Mno = Musteri.Mno
+JOIN Arac ON Satis.Aracno = Arac.Aracno
+WHERE Musteri.Madres LIKE '%Tokat%';
